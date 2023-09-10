@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: 12345
-    url: jdbc:postgresql://host.docker.internal:5432/e-comm02
+    url: jdbc:postgresql://localhost:5432/e-comm02
   #    platform: postgres
   #    initialization-mode: always
   #    continue-on-error: true
