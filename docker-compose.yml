@@ -1,0 +1,17 @@
+# docker-compose.yml
+version: '3'
+services:
+  webapp:
+    image: myecommerce-web-backend
+    ports:
+      - "9002:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/e-comm02
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=e-comm02
