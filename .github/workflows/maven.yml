@@ -46,8 +46,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./target/my-artifact.jar # replace with your artifact's path
-        asset_name: my-artifact.jar
+        asset_path: ./target/ecomm-0.0.1-SNAPSHOT.jar # replace with your artifact's path
+        asset_name: ecomm-0.0.1-SNAPSHOT.jar
         asset_content_type: application/jar
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
