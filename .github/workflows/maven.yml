@@ -45,25 +45,17 @@ jobs:
         curl -o wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
         chmod +x wait-for-it.sh
 
-    - name: Wait for PostgreSQL
-      run: ./wait-for-it.sh postgres:5432 -t 120
-
-    - name: Check PostgreSQL service
+    - name: Check PostgreSQL availability
       run: |
-        nc -zv *** 5432
-        pg_isready -h *** -p 5432
+        apt-get update
+        apt-get install -y netcat
+        nc -zv postgres 5432
 
-        #    - name: Cache Maven packages
-#      uses: actions/cache@v2
-#      with:
-#        path: ~/.m2
-#        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#        restore-keys: ${{ runner.os }}-m2
-        
-    - name: Build with Maven
-      run: mvn clean install
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    - name: Check PostgreSQL readiness
+      run: pg_isready -h postgres -p 5432
+
+    - name: Wait for PostgreSQL
+      run: ./wait-for-it.sh postgres:5432 -t 200
 
     - name: Check PostgreSQL Connection
       run: |
@@ -71,6 +63,11 @@ jobs:
         psql -h postgres -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c 'SELECT NOW()'
       env:
         PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+    - name: Build with Maven
+      run: mvn clean install
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     - name: Test with Maven
       run: mvn test
