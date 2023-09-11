@@ -46,7 +46,12 @@ jobs:
         chmod +x wait-for-it.sh
 
     - name: Wait for PostgreSQL
-      run: ./wait-for-it.sh postgres:5432 --timeout=60
+      run: ./wait-for-it.sh postgres:5432 -t 120
+
+    - name: Check PostgreSQL service
+      run: |
+        nc -zv *** 5432
+        pg_isready -h *** -p 5432
 
         #    - name: Cache Maven packages
 #      uses: actions/cache@v2
