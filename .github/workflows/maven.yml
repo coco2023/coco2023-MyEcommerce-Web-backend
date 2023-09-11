@@ -85,7 +85,7 @@ jobs:
 
     - name: Check PostgreSQL Connection
       run: |
-        PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h postgres -U ${{ secrets.POSTGRES_USER }} -d e-comm02 -c 'SELECT 1'
+        PGPASSWORD=12345 psql -h postgres -U postgres -d e-comm02 -c 'SELECT 1'
 
     - name: Build with Maven
       run: mvn clean install
