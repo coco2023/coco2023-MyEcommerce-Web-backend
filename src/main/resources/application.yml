@@ -1,12 +1,11 @@
 
 ## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
 spring:
-  profiles: local
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: 12345
-    url: ${DATABASE_URL} # jdbc:postgresql://host.docker.internal:5432/e-comm02
+    url: jdbc:postgresql://host.docker.internal:5432/e-comm02 # ${DATABASE_URL} #
   #    platform: postgres
   #    initialization-mode: always
   #    continue-on-error: true
