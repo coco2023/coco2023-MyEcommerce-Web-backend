@@ -28,6 +28,7 @@ jobs:
           POSTGRES_DB: e-comm02
         ports:
           - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
@@ -37,8 +38,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-        
-#    - name: Cache Maven packages
+
+    - name: Wait for PostgreSQL
+      run: ./wait-for-it.sh postgres:5432 --timeout=60
+
+        #    - name: Cache Maven packages
 #      uses: actions/cache@v2
 #      with:
 #        path: ~/.m2
@@ -50,8 +54,17 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+    - name: Check PostgreSQL Connection
+      run: |
+        sudo apt-get -y install postgresql-client
+        psql -h postgres -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -c 'SELECT NOW()'
+      env:
+        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
     - name: Test with Maven
       run: mvn test
+      env:
+        DATABASE_URL: jdbc:postgresql://postgres:5432/e-comm02
 
     - name: Deploy to GitHub Releases (Simple Example)
       if: startsWith(github.ref, 'refs/tags/')
