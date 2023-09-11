@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      db:
         image: postgres:latest
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -85,19 +85,19 @@ jobs:
 
     - name: Check PostgreSQL Connection
       run: |
-        PGPASSWORD=12345 psql -h postgres -U postgres -d e-comm02 -c 'SELECT 1'
+        PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }} psql -h db -U ${{ secrets.POSTGRES_USER }} -d e-comm02 -c 'SELECT 1'
 
     - name: Build with Maven
       run: mvn clean install
       env:
         DATABASE_USER: ${{ secrets.POSTGRES_USER }}
         DATABASE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: jdbc:postgresql://db:5432/e-comm02 # ${{ secrets.DATABASE_URL }}
 
     - name: Test with Maven
       run: mvn test
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: jdbc:postgresql://db:5432/e-comm02 # ${{ secrets.DATABASE_URL }}
 
 #    - name: Build with Maven
 #      run: mvn clean install
