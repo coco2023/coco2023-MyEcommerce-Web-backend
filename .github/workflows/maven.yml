@@ -47,9 +47,9 @@ jobs:
 
     - name: Check PostgreSQL availability
       run: |
-        apt-get update
-        apt-get install -y netcat
-        nc -zv postgres 5432
+        sudo apt-get update
+        sudo apt-get install -y netcat
+        nc -zv *** 5432
 
     - name: Check PostgreSQL readiness
       run: pg_isready -h postgres -p 5432
